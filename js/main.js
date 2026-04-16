@@ -56,5 +56,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
   revealElements.forEach(el => revealObserver.observe(el));
 
+  // --- Carousels ---
+  document.querySelectorAll('[data-carousel]').forEach(carousel => {
+    const slides = carousel.querySelectorAll('.carousel__slide');
+    const dotsContainer = carousel.querySelector('.carousel__dots');
+    let current = 0;
+
+    slides.forEach((_, i) => {
+      const dot = document.createElement('button');
+      dot.classList.add('carousel__dot');
+      if (i === 0) dot.classList.add('carousel__dot--active');
+      dot.setAttribute('aria-label', `Imagen ${i + 1}`);
+      dot.addEventListener('click', () => goTo(i));
+      dotsContainer.appendChild(dot);
+    });
+
+    const dots = dotsContainer.querySelectorAll('.carousel__dot');
+
+    function goTo(index) {
+      slides[current].classList.remove('carousel__slide--active');
+      dots[current].classList.remove('carousel__dot--active');
+      current = index;
+      slides[current].classList.add('carousel__slide--active');
+      dots[current].classList.add('carousel__dot--active');
+    }
+
+    setInterval(() => {
+      goTo((current + 1) % slides.length);
+    }, 5000);
+  });
+
   // --- Contact form (handled by Formsubmit.co) ---
 });
